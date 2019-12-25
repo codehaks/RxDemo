@@ -1,29 +1,56 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace RxDemo
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             Console.WriteLine("Hello World!");
 
-            var numbers = Enumerable.Range(1, 10);
-            var observableQuery = numbers.ToObservable();
+            //var magic = new MagicalNumberGenerator();
+            //foreach (var item in magic.Generate(5)) 
+            //{
+            //    Console.WriteLine($"{item}");
 
-            observableQuery.Subscribe((n) =>
+            //}
+
+            var magic = new AsyncMagicalNumberGenerator();
+            await foreach (var item in magic.Generate(5))
             {
-                Console.WriteLine($" Number = {n} ");
-            },
-            _ =>
+                Console.WriteLine($"{item}");
+
+            }
+
+
+        }
+    }
+
+    class MagicalNumberGenerator
+    {
+        public IEnumerable<int> Generate(int amount) {
+            for (int i = 0; i < amount; i++)
             {
+                Thread.Sleep(2000);
+                yield return new Random().Next(10, 100);
+            }
+        }
+    }
 
-                Console.WriteLine("Done!");
-            });
-
-
+    class AsyncMagicalNumberGenerator
+    {
+        public async IAsyncEnumerable<int> Generate(int amount)
+        {
+            for (int i = 0; i < amount; i++)
+            {
+                await Task.Delay(2000);
+                yield return new Random().Next(10, 100);
+            }
         }
     }
 }
