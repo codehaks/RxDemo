@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
@@ -10,9 +11,13 @@ namespace RxDemo
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             Console.WriteLine("Hello World!");
+
+            var client = new HttpClient();
+
+            var page = await client.GetAsync("https://google.com");
 
             //var magic = new MagicalNumberGenerator();
             //foreach (var item in magic.Generate(5)) 
@@ -28,10 +33,10 @@ namespace RxDemo
 
             //}
 
-            var magic = new MagicalNumberGenerator();
-            var subscription = magic.GenerateNumber(5)
-                .Timestamp()
-                .Subscribe((number) => Console.WriteLine($"{number.Value} - {number.Timestamp.Second}"));
+            //var magic = new MagicalNumberGenerator();
+            //var subscription = magic.GenerateNumber(5)
+            //    .Timestamp()
+            //    .Subscribe((number) => Console.WriteLine($"{number.Value} - {number.Timestamp.Second}"));
 
             Console.ReadLine();
 
