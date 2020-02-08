@@ -14,13 +14,11 @@ namespace RxLinkDemo
 
             var links = new List<string>();
 
-            //links.Add("https://microsoft.com");
-            //links.Add("https://amazon.com");        
+            links.Add("https://microsoft.com");
+            links.Add("https://amazon.com");
 
 
-            var query = links.ToObservable();
-
-            
+            var query = links.ToObservable();            
 
             query.Subscribe(async (url)=> {
 
