@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 
@@ -16,9 +17,11 @@ namespace RxLinkDemo
 
             links.Add("https://microsoft.com");
             links.Add("https://amazon.com");
+            links.Add("https://google.com");
+            links.Add("https://apple.com");
 
 
-            var query = links.ToObservable();            
+            var query = links.ToObservable(scheduler:Scheduler.CurrentThread);            
 
             query.Subscribe(async (url)=> {
 
@@ -29,12 +32,12 @@ namespace RxLinkDemo
 
             });
 
-            await query.Append("https://google.com");
-            await query.Append("https://apple.com");
+            //await query.Append("https://google.com");
+            //await query.Append("https://apple.com");
 
 
-            await Task.Delay(10000);
-            Console.ReadLine();
+            //await Task.Delay(10000);
+            //Console.ReadLine();
 
        
 
