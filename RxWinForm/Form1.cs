@@ -20,22 +20,59 @@ namespace RxWinForm
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            var movingEvents = Observable
-                .FromEventPattern<MouseEventHandler, MouseEventArgs>
-                (   h => this.MouseMove += h,
-                    h => this.MouseMove -= h);
+            //var movingEvents = Observable
+            //    .FromEventPattern<MouseEventHandler, MouseEventArgs>
+            //    (h => this.MouseMove += h,
+            //        h => this.MouseMove -= h);
 
-            var mouseMove = from e1 in movingEvents
-                             select e1;
+            //var mouseMove = from e1 in movingEvents
+            //                select e1;
 
-            mouseMove.Subscribe((d) => {
+            //mouseMove.Subscribe((d) =>
+            //{
 
-                textBox1.Text = d.EventArgs.X.ToString();
-                textBox2.Text = d.EventArgs.Y.ToString();
+            //    textBox1.Text = d.EventArgs.X.ToString();
+            //    textBox2.Text = d.EventArgs.Y.ToString();
+            //});
+
+            var textChangeObserver = Observable
+                .FromEventPattern<KeyEventHandler, KeyEventArgs>
+                (k =>
+                {
+                    textBox1.KeyUp += k;
+                    textBox2.KeyUp += k;
+                },
+                k =>
+                {
+                    textBox1.KeyUp -= k;
+                    textBox2.KeyUp += k;
+                });
+
+            var keyPress = from e1 in textChangeObserver select e1;
+
+            keyPress.Subscribe((key) =>
+            {
+                if (string.IsNullOrEmpty(textBox1.Text))
+                {
+                    textBox1.Text = 0.ToString();
+                }
+
+                if (string.IsNullOrEmpty(textBox2.Text))
+                {
+                    textBox2.Text = 0.ToString();
+                }
+
+                label3.Text = (Convert.ToInt32(textBox1.Text) + Convert.ToInt32(textBox2.Text)).ToString();
             });
 
-           
+
+
+
         }
 
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
