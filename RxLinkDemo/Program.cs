@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RxLinkDemo
@@ -13,41 +14,33 @@ namespace RxLinkDemo
         {
             Console.WriteLine("Hello World!");
 
-            var links = new List<string>();
+            var links = await System.IO.File.ReadAllLinesAsync(@"E:\Projects\Data\urls.txt");
 
-            links.Add("https://microsoft.com");
-            links.Add("https://amazon.com");
-            links.Add("https://google.com");
-            links.Add("https://apple.com");
-
-
-            var query = links.ToObservable(scheduler:Scheduler.CurrentThread);            
+            var query = links.ToObservable(scheduler: Scheduler.ThreadPool);            
 
             query.Subscribe(async (url)=> {
 
                 var client = new HttpClient();
-                var page = await client.GetAsync(url);
-                var pageSize = page.Content.Headers.ContentLength.Value;
-                Console.WriteLine($" {url} ({pageSize})");
+                try
+                {
+                    Console.WriteLine($" {url} started --- ");
+                    client.Timeout = TimeSpan.FromSeconds(100);
 
+                    var page = await client.GetAsync(url,HttpCompletionOption.ResponseContentRead);
+                    var pageSize = page.Content.Headers.ContentLength.Value;
+                    Console.WriteLine($" --- {url}                    (Size : {pageSize}) [{Thread.CurrentThread.ManagedThreadId}]");
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    Console.WriteLine($" {url}      (Size : {0}) [{Thread.CurrentThread.ManagedThreadId}] - ERR");
+                }
+               
             });
 
-            //await query.Append("https://google.com");
-            //await query.Append("https://apple.com");
-
-
-            //await Task.Delay(10000);
-            //Console.ReadLine();
-
-       
-
-            //query.Subscribe(async (url) =>
-            //{
-            //    var client = new HttpClient();
-            //    var page = await client.GetAsync(url);
-            //    var pageSize = page.Content.Headers.ContentLength.Value;
-            //}, Console.WriteLine("Done"),);
-
+          
+            Console.ReadLine();
 
         }
     }
