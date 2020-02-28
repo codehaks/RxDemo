@@ -20,21 +20,6 @@ namespace RxWinForm
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //var movingEvents = Observable
-            //    .FromEventPattern<MouseEventHandler, MouseEventArgs>
-            //    (h => this.MouseMove += h,
-            //        h => this.MouseMove -= h);
-
-            //var mouseMove = from e1 in movingEvents
-            //                select e1;
-
-            //mouseMove.Subscribe((d) =>
-            //{
-
-            //    textBox1.Text = d.EventArgs.X.ToString();
-            //    textBox2.Text = d.EventArgs.Y.ToString();
-            //});
-
             var textChangeObserver = Observable
                 .FromEventPattern<KeyEventHandler, KeyEventArgs>
                 (k =>
@@ -64,15 +49,6 @@ namespace RxWinForm
 
                 label3.Text = (Convert.ToInt32(textBox1.Text) + Convert.ToInt32(textBox2.Text)).ToString();
             });
-
-
-
-
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
         }
     }
 }
