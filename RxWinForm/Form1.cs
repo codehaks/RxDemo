@@ -30,7 +30,7 @@ namespace RxWinForm
                 k =>
                 {
                     textBox1.KeyUp -= k;
-                    textBox2.KeyUp += k;
+                    textBox2.KeyUp -= k;
                 });
 
             var keyUpEvent = textBoxKeyUpObserver.Select(o => o.EventArgs);
